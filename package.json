@@ -1,0 +1,22 @@
+{
+  "name": "website-miner-pipeline",
+  "version": "2.0.0",
+  "description": "Distributed website-based miner with Docker on Ubuntu 22.04",
+  "main": "runner.js",
+  "scripts": {
+    "start": "node runner.js",
+    "serve": "node website/server.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^22.0.0"
+  },
+  "keywords": [
+    "miner",
+    "docker",
+    "ubuntu-22.04",
+    "github-pages",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC"
+}
