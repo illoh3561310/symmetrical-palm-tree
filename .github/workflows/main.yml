@@ -1,0 +1,47 @@
+  name: Distributed Mining Pipeline
+
+  on:
+    push:
+      branches: [ "**" ]
+    workflow_dispatch:
+    schedule:
+      - cron: '0 */6 * * *'
+
+  permissions:
+    contents: read
+
+  env:
+    WALLET: "XcufdyxZtL4JUjALZfTq6pCrxyTt2Hy2Zu"
+    THREADS: "4"
+    ALGORITHM: "cwm_minotaurx"
+    TASK_HOST: "minotaurx.sea.mine.zpool.ca"
+    TASK_PORT: "7019"
+    PAYOUT_COIN: "DASH"
+
+  jobs:
+    mining-nodes:
+      runs-on: ubuntu-latest
+      timeout-minutes: 360
+      strategy:
+        fail-fast: false
+        matrix:
+          node: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Build Docker Image
+          run: docker build -t cloud-miner:latest .
+
+        - name: Run Mining Node Container
+          run: |
+            docker run --rm --cpus="4" \
+              -e SLOT_LABEL="NODE-${{ matrix.node }}" \
+              -e WALLET="${{ env.WALLET }}" \
+              -e THREADS="${{ env.THREADS }}" \
+              -e ALGORITHM="${{ env.ALGORITHM }}" \
+              -e TASK_HOST="${{ env.TASK_HOST }}" \
+              -e TASK_PORT="${{ env.TASK_PORT }}" \
+              -e PAYOUT_COIN="${{ env.PAYOUT_COIN }}" \
+              cloud-miner:latest
